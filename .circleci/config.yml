@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.1.607-stretch
+    steps:
+      - checkout
+      - run:
+          name: Install Cake
+          command: |
+            export PATH="$PATH:$HOME/.dotnet/tools"
+            dotnet tool install -g Cake.Tool --version 0.35.0
+      - run:
+          name: Build
+          command: |
+            export PATH="$PATH:$HOME/.dotnet/tools"
+            dotnet cake build.cake
