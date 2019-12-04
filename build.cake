@@ -158,6 +158,7 @@ Task("Pack")
     {
         foreach(var project in projects.Where(p => !p.IsTestProject))
         {
+            Console.WriteLine($"Calling OctoPack for {project.Name}");
             OctoPack(
                 project.Name,
                 new OctopusPackSettings()
