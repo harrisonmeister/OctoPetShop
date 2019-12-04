@@ -14,4 +14,4 @@ jobs:
           name: Build
           command: |
             export PATH="$PATH:$HOME/.dotnet/tools"
-            dotnet cake build.cake
+            dotnet cake build.cake --target="Pack"
