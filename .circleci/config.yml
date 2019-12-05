@@ -19,12 +19,30 @@ jobs:
             export PATH="$PATH:$HOME/.dotnet/tools"
             dotnet cake build.cake --target="Publish" --packageVersion="${PACKAGEVERSION}"
       - persist_to_workspace:
-          root: .
+          root: publish
           paths:
-            - publish/*
+            - OctopusSamples.OctoPetShop.Database/*
+  package:
+    docker:
+      - image: octopusdeploy/octo:latest
+    environment:
+      PACKAGEVERSION: 1.3.<< pipeline.number >>
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: publish
+      - run:
+          name: Call octo
+          command: |
+            octo pack --id="OctopusSamples.OctoPetShop.Database" --format="NuPkg" --version="${PACKAGEVERSION}" --basePath="publish/OctopusSamples.OctoPetShop.Database" --outFolder="package"
+      - store_artifacts:
+          path: package
 
 workflows:
   version: 2
   build:
     jobs:
       - build
+      - package:
+          requires:
+            - build
