@@ -1,4 +1,5 @@
 version: 2.1
+
 jobs:
   build:
     docker:
@@ -17,3 +18,8 @@ jobs:
           command: |
             export PATH="$PATH:$HOME/.dotnet/tools"
             dotnet cake build.cake --target="Publish" --packageVersion="${PACKAGEVERSION}"
+
+workflows:
+  build:
+    jobs:
+      - build
