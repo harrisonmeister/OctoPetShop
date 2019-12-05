@@ -18,8 +18,11 @@ jobs:
           command: |
             export PATH="$PATH:$HOME/.dotnet/tools"
             dotnet cake build.cake --target="Publish" --packageVersion="${PACKAGEVERSION}"
+      - store_test_results:
+          path: testResults
 
 workflows:
+  version: 2
   build:
     jobs:
       - build
