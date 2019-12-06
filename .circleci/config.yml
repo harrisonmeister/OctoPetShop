@@ -1,5 +1,157 @@
 version: 2.1
 
+orbs:
+  mem: circleci/rememborb@0.0.1
+  octo:
+    executors:
+      octoexecutor:
+        parameters:
+          tools_version:
+            type: string
+            default: "latest"
+        docker:
+          - image: octopusdeploy/octo:<<parameters.tools_version>>
+    commands:
+      install-tools:
+        parameters:
+          version:
+            type: string
+            default: "6.17.0"
+        steps:
+          - run:
+              name: Install octo.exe
+              command: dotnet tool install Octopus.DotNet.Cli --global --version << parameters.version >>
+          - run:
+              name: "Update path"
+              command: |
+                echo 'export PATH="$PATH:/root/.dotnet/tools"' >> $BASH_ENV
+      pack:
+        parameters:
+          id:
+            type: string
+          format:
+            type: string
+            default: "NuPkg"
+          version:
+            type: string
+            default: ""
+          out_folder:
+            type: string
+            default: "."
+          base_path:
+            type: string
+            default: "."
+          verbose:
+            type: boolean
+            default: false
+          log_level:
+            type: string
+            default: "debug"
+        steps:
+          - run:
+              name: "Package << parameters.id >>"
+              command: dotnet octo pack --id="<< parameters.id >>" --format="<< parameters.format >>" --version="<< parameters.version >>" --basePath="<< parameters.base_path >>" --outFolder="<< parameters.out_folder >>"
+      push:
+        parameters:
+          package:
+            type: string
+          overwrite_mode:
+            type: string
+            default: "FailIfExists"
+          replace_existing:
+            type: boolean
+            default: false
+          use_delta_compression:
+            type: boolean
+            default: true
+          server:
+            type: string
+            default: ""
+          api_key:
+            type: string
+            default: ""
+        steps:
+          - run:
+              name: "Push << parameters.package >>"
+              command: dotnet octo push --server="<< parameters.server >>" --apiKey="<< parameters.api_key >>" --package="<< parameters.package >>" --overwrite-mode="<< parameters.overwrite_mode >>" --replace-existing=<< parameters.replace_existing >> --use-delta-compression="<< parameters.use_delta_compression >>"
+
+    jobs:
+      pack:
+        parameters:
+          tools_version:
+            type: string
+            default: "latest"
+          id:
+            type: string
+          format:
+            type: string
+            default: "NuPkg"
+          version:
+            type: string
+            default: ""
+          out_folder:
+            type: string
+            default: "."
+          base_path:
+            type: string
+            default: "."
+          verbose:
+            type: boolean
+            default: false
+          log_level:
+            type: string
+            default: "debug"
+        executor:
+          name: octoexecutor
+          tools_version: << parameters.tools_version >>
+        steps:
+          - run:
+              name: "Package << parameters.id >>"
+              command: octo pack --id="<< parameters.id >>" --format="<< parameters.format >>" --version="<< parameters.version >>" --basePath="<< parameters.base_path >>" --outFolder="<< parameters.out_folder >>"
+      push:
+        parameters:
+          tools_version:
+            type: string
+            default: "latest"
+          package:
+            type: string
+          overwrite_mode:
+            type: string
+            default: "FailIfExists"
+          replace_existing:
+            type: boolean
+            default: false
+          use_delta_compression:
+            type: boolean
+            default: true
+          server:
+            type: string
+            default: ""
+          api_key:
+            type: string
+            default: ""
+        executor:
+          name: octoexecutor
+          tools_version: << parameters.tools_version >>
+        environment:
+          OCTOPUS_CLI_SERVER: "<< parameters.server >>"
+          OCTOPUS_CLI_API_KEY: "<< parameters.api_key >>"
+        steps:
+          - run:
+              name: "Push << parameters.package >>"
+              command: octo push --package="<< parameters.package >>" --overwrite-mode="<< parameters.overwrite_mode >>" --replace-existing=<< parameters.replace_existing >> --use-delta-compression="<< parameters.use_delta_compression >>"
+  octopetshop:
+    commands:
+      pack:
+        parameters:
+          id:
+            type: string
+        steps:
+          - octo/pack:
+              id: "<< parameters.id >>"
+              version: ${VERSION}
+              base_path: "publish/<< parameters.id >>"
+              out_folder: "package"
 jobs:
   build:
     docker:
@@ -7,6 +159,9 @@ jobs:
     environment:
       PACKAGEVERSION: 1.3.<< pipeline.number >>
     steps:
+      - mem/remember:
+          env_var: VERSION
+          value: "1.0.$CIRCLE_BUILD_NUM"
       - checkout
       - run:
           name: Install Cake
@@ -18,26 +173,76 @@ jobs:
           command: |
             export PATH="$PATH:$HOME/.dotnet/tools"
             dotnet cake build.cake --target="Publish" --packageVersion="${PACKAGEVERSION}"
+      - run:
+          name: Save build number (for deploy steps)
+          command: |
+            CIRCLE_BUILD_NUM_DOCKER=${CIRCLE_BUILD_NUM}
+
+            mkdir -p /tmp/workspace/
+            cd /tmp/workspace/
+            echo 1.0.${CIRCLE_BUILD_NUM} > version.txt
       - persist_to_workspace:
           root: publish
           paths:
-            - OctopusSamples.OctoPetShop.Database/*
+            - OctopusSamples.OctoPetShop.Database
+            - OctopusSamples.OctoPetShop.Infrastructure
+            - OctopusSamples.OctoPetShop.ProductService
+            - OctopusSamples.OctoPetShop.ShoppingCartService
+            - OctopusSamples.OctoPetShop.Web
   package:
     docker:
-      - image: octopusdeploy/octo:latest
-    environment:
-      PACKAGEVERSION: 1.3.<< pipeline.number >>
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.1.607-stretch
+    shell: /bin/bash
     steps:
+      - octo/install-tools
+      - mem/recall:
+          env_var: VERSION
       - attach_workspace:
-          # Must be absolute path or relative path from working_directory
           at: publish
-      - run:
-          name: Call octo
-          command: |
-            octo pack --id="OctopusSamples.OctoPetShop.Database" --format="NuPkg" --version="${PACKAGEVERSION}" --basePath="publish/OctopusSamples.OctoPetShop.Database" --outFolder="package"
+      - octo/pack:
+          id: "OctopusSamples.OctoPetShop.Database"
+          version: ${VERSION}
+          base_path: "publish/OctopusSamples.OctoPetShop.Database"
+          out_folder: "package"
+      - octo/pack:
+          id: "OctopusSamples.OctoPetShop.Infrastructure"
+          version: ${VERSION}
+          base_path: "publish/OctopusSamples.OctoPetShop.Infrastructure"
+          out_folder: "package"
+      - octo/pack:
+          id: "OctopusSamples.OctoPetShop.ProductService"
+          version: ${VERSION}
+          base_path: "publish/OctopusSamples.OctoPetShop.ProductService"
+          out_folder: "package"
+      - octo/pack:
+          id: "OctopusSamples.OctoPetShop.ShoppingCartService"
+          version: ${VERSION}
+          base_path: "publish/OctopusSamples.OctoPetShop.ShoppingCartService"
+          out_folder: "package"
+      - octo/pack:
+          id: "OctopusSamples.OctoPetShop.Web"
+          version: ${VERSION}
+          base_path: "publish/OctopusSamples.OctoPetShop.Web"
+          out_folder: "package"
+      - persist_to_workspace:
+          root: package
+          paths:
+            - OctopusSamples*
       - store_artifacts:
           path: package
-
+  push:
+    docker:
+      - image: mcr.microsoft.com/dotnet/core/sdk:2.1.607-stretch
+    steps:
+      - octo/install-tools
+      - mem/recall:
+          env_var: VERSION
+      - attach_workspace:
+          at: package
+      - octo/push:
+          package: "package/OctopusSamples.OctoPetShop.Database.${VERSION}.nupkg"
+          server: "${OCTOPUS_SERVER}"
+          api_key: "${OCTOPUS_API_KEY}"
 workflows:
   version: 2
   build:
@@ -46,3 +251,6 @@ workflows:
       - package:
           requires:
             - build
+      - push:
+          requires:
+            - package
