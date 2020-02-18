@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp2.1</TargetFramework>
+		<RazorLangVersion>2.0</RazorLangVersion>
     </PropertyGroup>
 
     <ItemGroup>
