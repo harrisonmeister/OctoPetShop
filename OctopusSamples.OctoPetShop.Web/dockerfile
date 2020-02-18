@@ -11,4 +11,4 @@ EXPOSE 5000 5001
 ENV ASPNETCORE_URLS="http://+:5000;https://+:5001"
 ENV ASPNETCORE_ENVIRONMENT="Production"
 
-ENTRYPOINT [ "dotnet", "run", "--no-launch-profile" ]
+ENTRYPOINT [ "dotnet", "run", "--no-launch-profile" ] 
