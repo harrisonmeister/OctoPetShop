@@ -99,6 +99,7 @@ jobs:
         OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
         OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+      with:  
         packages: |
           artifacts/OctoPetShop.Database.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.Web.${{ steps.version-generator.outputs.version }}.zip
