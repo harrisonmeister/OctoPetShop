@@ -111,15 +111,13 @@ jobs:
       name: Push OPS Build Information to Octopus 🐙
       needs: build 
       runs-on: ubuntu-latest
-      
-      env:
-        OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
-        OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-        OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE }}
-      
       steps:
-      - uses: OctopusDeploy/push-build-information-action@v3
-        name: Push Build Information
+      - name: Push Build Information
+        uses: OctopusDeploy/push-build-information-action@v3
+        env:
+          OCTOPUS_URL: ${{ secrets.OCTOPUS_URL }}
+          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
+          OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE }}
         with:
           version: ${{ needs.build.outputs.version }}
           packages: |
