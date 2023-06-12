@@ -89,7 +89,7 @@ jobs:
         package_id: 'OctoPetShop.ShoppingCartService'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: $GITHUB_WORKSPACE/artifacts
-        base_path: /artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+        base_path: artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
         files: |
           **/*.*
     
