@@ -35,30 +35,30 @@ jobs:
     
     - name: Create artifacts folder
       run: |
-        mkdir "$GITHUB_WORKSPACE/artifacts"
-        mkdir "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.Database"
-        mkdir "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.Web"
-        mkdir "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.ProductService"
-        mkdir "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService"
+        mkdir "artifacts"
+        mkdir "artifacts/OctopusSamples.OctoPetShop.Database"
+        mkdir "artifacts/OctopusSamples.OctoPetShop.Web"
+        mkdir "artifacts/OctopusSamples.OctoPetShop.ProductService"
+        mkdir "artifacts/OctopusSamples.OctoPetShop.ShoppingCartService"
     
     - name: Publish OPS-Database
-      run: dotnet publish OctopusSamples.OctoPetShop.Database/OctopusSamples.OctoPetShop.Database.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.Database"
+      run: dotnet publish OctopusSamples.OctoPetShop.Database/OctopusSamples.OctoPetShop.Database.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.Database"
     
     - name: Publish OPS-Web
-      run: dotnet publish OctopusSamples.OctoPetShop.Web/OctopusSamples.OctoPetShop.Web.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.Web"
+      run: dotnet publish OctopusSamples.OctoPetShop.Web/OctopusSamples.OctoPetShop.Web.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.Web"
     
     - name: Publish OPS-ProductService
-      run: dotnet publish OctopusSamples.OctoPetShop.ProductService/OctopusSamples.OctoPetShop.ProductService.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.ProductService"
+      run: dotnet publish OctopusSamples.OctoPetShop.ProductService/OctopusSamples.OctoPetShop.ProductService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.ProductService"
     
     - name: Publish OPS-ShoppingCartService
-      run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "$GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetshop.ShoppingCartService"
+      run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService"
 
     - name: Package OPS-Database
       uses: OctopusDeploy/create-zip-package-action@v3
       with:
         package_id: 'OctoPetShop.Database'
         version: ${{ steps.version-generator.outputs.version }}
-        output_folder: $GITHUB_WORKSPACE/artifacts
+        output_folder: artifacts
         base_path: artifacts/OctopusSamples.OctoPetShop.Database
         files: |
           **/*.*
@@ -68,7 +68,7 @@ jobs:
       with:
         package_id: 'OctoPetShop.Web'
         version: ${{ steps.version-generator.outputs.version }}
-        output_folder: $GITHUB_WORKSPACE/artifacts
+        output_folder: artifacts
         base_path: artifacts/OctopusSamples.OctoPetShop.Web
         files: |
           **/*.*
@@ -78,7 +78,7 @@ jobs:
       with:
         package_id: 'OctoPetShop.ProductService'
         version: ${{ steps.version-generator.outputs.version }}
-        output_folder: $GITHUB_WORKSPACE/artifacts
+        output_folder: artifacts
         base_path: artifacts/OctopusSamples.OctoPetShop.ProductService
         files: |
           **/*.*
@@ -88,7 +88,7 @@ jobs:
       with:
         package_id: 'OctoPetShop.ShoppingCartService'
         version: ${{ steps.version-generator.outputs.version }}
-        output_folder: $GITHUB_WORKSPACE/artifacts
+        output_folder: artifacts
         base_path: artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
         files: |
           **/*.*
