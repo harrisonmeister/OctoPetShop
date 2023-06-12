@@ -9,7 +9,7 @@ jobs:
 
   build:
 
-    name: Build & Push OPS packages
+    name: Build & Push OPS packages to Octopus 🐙
     runs-on: ubuntu-latest
     
     outputs:
@@ -59,7 +59,7 @@ jobs:
         package_id: 'OctoPetShop.Database'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: $GITHUB_WORKSPACE/artifacts
-        base_path: $GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.Database
+        base_path: artifacts/OctopusSamples.OctoPetShop.Database
         files: |
           **/*.*
 
@@ -69,7 +69,7 @@ jobs:
         package_id: 'OctoPetShop.Web'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: $GITHUB_WORKSPACE/artifacts
-        base_path: $GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.Web
+        base_path: artifacts/OctopusSamples.OctoPetShop.Web
         files: |
           **/*.*
 
@@ -79,7 +79,7 @@ jobs:
         package_id: 'OctoPetShop.ProductService'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: $GITHUB_WORKSPACE/artifacts
-        base_path: $GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.ProductService
+        base_path: artifacts/OctopusSamples.OctoPetShop.ProductService
         files: |
           **/*.*
 
@@ -89,7 +89,7 @@ jobs:
         package_id: 'OctoPetShop.ShoppingCartService'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: $GITHUB_WORKSPACE/artifacts
-        base_path: $GITHUB_WORKSPACE/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+        base_path: /artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
         files: |
           **/*.*
     
