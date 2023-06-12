@@ -15,6 +15,11 @@ jobs:
     outputs:
       version: ${{ steps.version-generator.outputs.version }}
 
+    env:
+      OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
+      OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
+      OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+
     steps:
     - uses: actions/checkout@v3
     
@@ -95,10 +100,7 @@ jobs:
     
     - name: Push OPS packages to Octopus 🐙
       uses: OctopusDeploy/push-package-action@v3
-      env:
-        OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
-        OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-        OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+      
       with:  
         packages: |
           artifacts/OctoPetShop.Database.${{ steps.version-generator.outputs.version }}.zip
@@ -111,13 +113,16 @@ jobs:
       name: Push OPS Build Information to Octopus 🐙
       needs: build 
       runs-on: ubuntu-latest
+
+      env:
+        OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
+        OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
+        OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+        
       steps:
       - name: Push Build Information
         uses: OctopusDeploy/push-build-information-action@v3
-        env:
-          OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
-          OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-          OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+       
         with:
           version: ${{ needs.build.outputs.version }}
           packages: |
