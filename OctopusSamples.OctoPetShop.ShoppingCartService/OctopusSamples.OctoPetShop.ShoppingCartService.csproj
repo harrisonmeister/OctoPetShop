@@ -3,6 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <RepositoryUrl>https://github.com/OctopusSamples/OctoPetShop.git</RepositoryUrl>
     <IsPackable>true</IsPackable>
+    <IsPublishable>true</IsPublishable>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
