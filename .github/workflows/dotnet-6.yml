@@ -44,7 +44,7 @@ jobs:
         mkdir "artifacts/OctopusSamples.OctoPetShop.Database"
         mkdir "artifacts/OctopusSamples.OctoPetShop.Web"
         mkdir "artifacts/OctopusSamples.OctoPetShop.ProductService"
-        mkdir "artifacts/OctopusSamples.OctoPetShop.ShoppingCartService"
+        mkdir "artifacts/OctopusSamples.OctoPetShop.SCS"
     
     - name: Publish OPS-Database
       run: dotnet publish OctopusSamples.OctoPetShop.Database/OctopusSamples.OctoPetShop.Database.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.Database"
@@ -56,15 +56,15 @@ jobs:
       run: dotnet publish OctopusSamples.OctoPetShop.ProductService/OctopusSamples.OctoPetShop.ProductService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.ProductService"
     
     - name: Publish OPS-ShoppingCartService
-      run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService"
+      run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.SCS"
 
     - name: List ShoppingCartService artifacts directory
       run: |
-        ls ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+        ls ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.SCS
 
     - name: Zip ShoppingCartService directory manually
       run: |
-        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.SCS
 
     - name: Package OPS-Database
       uses: OctopusDeploy/create-zip-package-action@v3
@@ -102,7 +102,7 @@ jobs:
         package_id: 'OctoPetShop.ShoppingCartService'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: artifacts
-        base_path: artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+        base_path: artifacts/OctopusSamples.OctoPetShop.SCS
         files: |
           **/*.*
     
