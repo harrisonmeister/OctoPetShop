@@ -40,11 +40,11 @@ jobs:
     
     - name: Create artifacts folder
       run: |
-        mkdir "artifacts"
-        mkdir "artifacts/OctopusSamples.OctoPetShop.Database"
-        mkdir "artifacts/OctopusSamples.OctoPetShop.Web"
-        mkdir "artifacts/OctopusSamples.OctoPetShop.ProductService"
-        mkdir "artifacts/OctopusSamples.OctoPetShop.ShoppingCartService"
+        mkdir ${{ github.workspace }}/artifacts
+        mkdir ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.Database
+        mkdir ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.Web
+        mkdir ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ProductService
+        mkdir ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
     
     - name: Publish OPS-Database
       run: dotnet publish OctopusSamples.OctoPetShop.Database/OctopusSamples.OctoPetShop.Database.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.Database"
