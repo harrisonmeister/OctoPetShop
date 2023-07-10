@@ -48,9 +48,6 @@ jobs:
     
     - name: Publish OPS-Database
       run: dotnet publish OctopusSamples.OctoPetShop.Database/OctopusSamples.OctoPetShop.Database.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.Database"
-    
-    - name: Publish OPS-ShoppingCartService
-      run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService" --verbosity=d
 
     - name: Publish OPS-Web
       run: dotnet publish OctopusSamples.OctoPetShop.Web/OctopusSamples.OctoPetShop.Web.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.Web"
@@ -58,6 +55,11 @@ jobs:
     - name: Publish OPS-ProductService
       run: dotnet publish OctopusSamples.OctoPetShop.ProductService/OctopusSamples.OctoPetShop.ProductService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.ProductService"
     
+    - name: Publish OPS-ShoppingCartService
+      run: |
+        dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService" --verbosity=m
+        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+
     - name: Package OPS-Database
       uses: OctopusDeploy/create-zip-package-action@v3
       with:
@@ -107,6 +109,7 @@ jobs:
           artifacts/OctoPetShop.Web.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.ProductService.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.ShoppingCartService.${{ steps.version-generator.outputs.version }}.zip         
+          artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip
 
   Push-build-information:
        

@@ -3,6 +3,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <RepositoryUrl>https://github.com/OctopusSamples/OctoPetShop.git</RepositoryUrl>
     <IsPackable>true</IsPackable>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.310801">
