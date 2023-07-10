@@ -58,6 +58,14 @@ jobs:
     - name: Publish OPS-ShoppingCartService
       run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService"
 
+    - name: List ShoppingCartService artifacts directory
+      run: |
+        ls ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+
+    - name: Zip ShoppingCartService directory manually
+      run: |
+        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+
     - name: Package OPS-Database
       uses: OctopusDeploy/create-zip-package-action@v3
       with:
@@ -107,6 +115,7 @@ jobs:
           artifacts/OctoPetShop.Web.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.ProductService.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.ShoppingCartService.${{ steps.version-generator.outputs.version }}.zip
+          artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip
 
   Push-build-information:
        
