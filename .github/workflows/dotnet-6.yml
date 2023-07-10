@@ -94,7 +94,7 @@ jobs:
         package_id: 'OctoPetShop.ShoppingCartService'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: artifacts
-        base_path: artifacts/OPS.ShoppingCartService
+        base_path: artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
         files: |
           **/*.*
     
