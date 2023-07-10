@@ -57,7 +57,6 @@ jobs:
     
     - name: Publish OPS-ShoppingCartService
       run: |
-        #dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService" --verbosity=m
         cp -a ${{ github.workspace }}/OctopusSamples.OctoPetShop.ShoppingCartService/bin/Release/net6.0 ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetshop.ShoppingCartService
         zip -r -j ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
 
@@ -109,8 +108,7 @@ jobs:
           artifacts/OctoPetShop.Database.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.Web.${{ steps.version-generator.outputs.version }}.zip
           artifacts/OctoPetShop.ProductService.${{ steps.version-generator.outputs.version }}.zip
-          artifacts/OctoPetShop.ShoppingCartService.${{ steps.version-generator.outputs.version }}.zip         
-          artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip
+          artifacts/OctoPetShop.ShoppingCartService.${{ steps.version-generator.outputs.version }}.zip
 
   Push-build-information:
        
