@@ -55,8 +55,8 @@ jobs:
     - name: Publish OPS-ProductService
       run: dotnet publish OctopusSamples.OctoPetShop.ProductService/OctopusSamples.OctoPetShop.ProductService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetShop.ProductService"
     
-    - name: Publish OPS-ShoppingCartService
-      run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.SCS"
+    # - name: Publish OPS-ShoppingCartService
+    #   run: dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --no-restore --output "artifacts/OctopusSamples.OctoPetshop.SCS"
 
     - name: List ShoppingCartService artifacts directory
       run: |
@@ -64,7 +64,7 @@ jobs:
 
     - name: Zip ShoppingCartService directory manually
       run: |
-        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.SCS
+        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/OctopusSamples.OctoPetShop.ShoppingCartService/bin/Release/net6.0
 
     - name: Package OPS-Database
       uses: OctopusDeploy/create-zip-package-action@v3
@@ -102,7 +102,7 @@ jobs:
         package_id: 'OctoPetShop.ShoppingCartService'
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: artifacts
-        base_path: artifacts/OctopusSamples.OctoPetShop.SCS
+        base_path: OctopusSamples.OctoPetShop.ShoppingCartService/bin/Release/net6.0
         files: |
           **/*.*
     
