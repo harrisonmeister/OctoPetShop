@@ -57,8 +57,9 @@ jobs:
     
     - name: Publish OPS-ShoppingCartService
       run: |
-        dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService" --verbosity=m
-        zip -r ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
+        #dotnet publish OctopusSamples.OctoPetShop.ShoppingCartService/OctopusSamples.OctoPetShop.ShoppingCartService.csproj --configuration Release --output "artifacts/OctopusSamples.OctoPetshop.ShoppingCartService" --verbosity=m
+        cp -a ${{ github.workspace }}/OctopusSamples.OctoPetShop.ShoppingCartService/bin/Release/net6.0 ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetshop.ShoppingCartService
+        zip -r -j ${{ github.workspace }}/artifacts/OPS.ShoppingCart.${{ steps.version-generator.outputs.version }}.zip ${{ github.workspace }}/artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
 
     - name: Package OPS-Database
       uses: OctopusDeploy/create-zip-package-action@v3
@@ -67,16 +68,6 @@ jobs:
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: artifacts
         base_path: artifacts/OctopusSamples.OctoPetShop.Database
-        files: |
-          **/*.*
-
-    - name: Package OPS-ShoppingCartService
-      uses: OctopusDeploy/create-zip-package-action@v3
-      with:
-        package_id: 'OctoPetShop.ShoppingCartService'
-        version: ${{ steps.version-generator.outputs.version }}
-        output_folder: artifacts
-        base_path: artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
         files: |
           **/*.*
 
@@ -97,6 +88,16 @@ jobs:
         version: ${{ steps.version-generator.outputs.version }}
         output_folder: artifacts
         base_path: artifacts/OctopusSamples.OctoPetShop.ProductService
+        files: |
+          **/*.*
+
+    - name: Package OPS-ShoppingCartService
+      uses: OctopusDeploy/create-zip-package-action@v3
+      with:
+        package_id: 'OctoPetShop.ShoppingCartService'
+        version: ${{ steps.version-generator.outputs.version }}
+        output_folder: artifacts
+        base_path: artifacts/OctopusSamples.OctoPetShop.ShoppingCartService
         files: |
           **/*.*
     
