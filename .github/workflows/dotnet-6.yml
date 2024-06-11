@@ -18,7 +18,7 @@ jobs:
     env:
       OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
       OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-      OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+      OCTOPUS_SPACE: ${{ vars.OCTOPUS_SPACE_NAME }}
 
     steps:
     - uses: actions/checkout@v3
@@ -118,7 +118,7 @@ jobs:
       env:
         OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-        OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+        OCTOPUS_SPACE: ${{ vars.OCTOPUS_SPACE_NAME }}
         
       steps:
       - name: Push Build Information
@@ -141,7 +141,7 @@ jobs:
       env:
         OCTOPUS_URL: ${{ secrets.OCTOPUS_SERVER_URL }}
         OCTOPUS_API_KEY: ${{ secrets.OCTOPUS_API_KEY }}
-        OCTOPUS_SPACE: ${{ secrets.OCTOPUS_SPACE_NAME }}
+        OCTOPUS_SPACE: ${{ vars.OCTOPUS_SPACE_NAME }}
         
       steps:
       - uses: OctopusDeploy/create-release-action@v3
